@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: May 11, 2026 at 08:12 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost
+-- Generation Time: Jun 29, 2026 at 03:16 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -78,6 +78,20 @@ CREATE TABLE `orders` (
   `order_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `customer_id`, `product_name`, `price`, `quantity`, `total_price`, `order_date`) VALUES
+(1, 1, 'Vanilla Matcha Green Tea', 65.00, 3, 195.00, '2026-05-18 06:06:29'),
+(2, 1, 'Matcha Set', 120.00, 1, 120.00, '2026-05-18 06:06:29'),
+(3, 1, 'Medium Roast Blend', 60.00, 2, 120.00, '2026-05-18 06:06:29'),
+(4, 1, 'Medium Roast Blend', 60.00, 1, 60.00, '2026-06-29 11:27:20'),
+(5, 1, 'Vanilla Flavored Blend', 55.00, 1, 55.00, '2026-06-29 11:27:20'),
+(6, 1, 'Vanilla Matcha Green Tea', 65.00, 1, 65.00, '2026-06-29 11:27:20'),
+(7, 1, 'Flavored Variety Cold Brew Singles', 85.00, 1, 85.00, '2026-06-29 12:31:22'),
+(8, 1, 'Ceramic Coffee Cup with plate', 40.00, 1, 40.00, '2026-06-29 12:31:22');
+
 -- --------------------------------------------------------
 
 --
@@ -99,22 +113,22 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `price`, `description`, `category`, `image`, `stock`) VALUES
-(1, 'Espresso Dark Roast Blend', 55.00, 'Smooth and nutty flavor with low acidity.', 'Coffee Beans', 'Espresso Dark Roast Blend.jpg', 20),
-(2, 'Medium Roast Blend', 60.00, 'Fruity and floral notes with bright acidity.', 'Coffee Beans', 'Medium Roast Blend.jpg', 18),
-(3, 'Vanilla Flavored Blend', 55.00, 'Balanced flavor with Vanilla sweetness.', 'Coffee Beans', 'Vanilla Flavored Blend.jpg', 15),
-(4, 'Light Roast Blend', 45.00, 'Rich and light flavor for early birds.', 'Coffee Beans', 'Light Roast Blend.jpg', 12),
-(5, 'XL Cold Brew Bags', 25.00, 'Organic Cold Brew Elephant Large Coffee Bags', 'Instant Coffee Packets', 'XL Cold Brew Bags.jpg', 30),
-(6, 'Flavored Variety Cold Brew Singles', 85.00, 'Enjoy a Variety of Flavored Cold Brew Singles or share it with loved ones.', 'Instant Coffee Packets', 'Flavored Variety Cold Brew Singles.jpg', 25),
-(7, 'Organic Variety Cold Brew Singles', 90.00, 'Enjoy Organic Variety Cold Brew Singles and share with loved ones.', 'Instant Coffee Packets', 'Organic Variety Cold Brew Singles.jpg', 28),
-(8, 'Vanilla Cold Brew Coffee Singles', 80.00, 'Rich foam coffee Vanilla Cold Brew Coffee Singles.', 'Instant Coffee Packets', 'Vanilla Cold Brew Coffee Singles.jpg', 20),
-(9, 'Medium Roast Cold Brew Singles', 85.00, 'Sweet caramel flavor.', 'Instant Coffee Packets', 'Medium Roast Cold Brew Singles.jpg', 18),
-(10, 'Matcha Green Tea', 60.00, 'High-quality matcha.', 'Matcha', 'Matcha Green Tea.jpg', 10),
-(11, 'Vanilla Matcha Green Tea', 65.00, 'Special Vanilla Green Tea edition.', 'Matcha', 'Vanilla Matcha Green Tea.jpg', 8),
-(12, 'Matcha Set', 120.00, 'Complete matcha kit.', 'Matcha', 'matcha_set.jpg', 5),
-(13, 'Iced Coffee Glass', 25.00, 'Perfect for iced coffee.', 'Accessories', 'iced_glass.jpg', 20),
-(14, 'Ceramic Coffee Cup with plate', 40.00, 'Classic hot coffee cup.', 'Accessories', 'ceramic_cup.jpg', 22),
-(15, 'Coffee Scented Candle', 35.00, 'Coffee aroma candle.', 'Accessories', 'coffee_candle.jpg', 15),
-(16, 'Matcha Scented Candle', 35.00, 'Relaxing matcha scent.', 'Accessories', 'matcha_candle.jpg', 15);
+(1, 'Espresso Dark Roast Blend', 55.00, 'Smooth and nutty flavor with low acidity.', 'Coffee Beans', 'Espresso Dark Roast Blend.png', 20),
+(2, 'Medium Roast Blend', 60.00, 'Fruity and floral notes with bright acidity.', 'Coffee Beans', 'Medium Roast Blend.png', 15),
+(3, 'Vanilla Flavored Blend', 55.00, 'Balanced flavor with Vanilla sweetness.', 'Coffee Beans', 'Vanilla Flavored Blend.png', 14),
+(4, 'Light Roast Blend', 45.00, 'Rich and light flavor for early birds.', 'Coffee Beans', 'Light Roast Blend.png', 12),
+(5, 'XL Cold Brew Bags', 25.00, 'Organic Cold Brew Elephant Large Coffee Bags', 'Instant Coffee Packets', 'XL Cold Brew Bags.png', 30),
+(6, 'Flavored Variety Cold Brew Singles', 85.00, 'Enjoy a Variety of Flavored Cold Brew Singles or share it with loved ones.', 'Instant Coffee Packets', 'Flavored Variety Cold Brew Singles.png', 24),
+(7, 'Organic Variety Cold Brew Singles', 90.00, 'Enjoy Organic Variety Cold Brew Singles and share with loved ones.', 'Instant Coffee Packets', 'Variety Cold Brew Singles.png', 28),
+(8, 'Vanilla Cold Brew Coffee Singles', 80.00, 'Rich foam coffee Vanilla Cold Brew Coffee Singles.', 'Instant Coffee Packets', 'Vanilla Cold Brew Singles.png', 20),
+(9, 'Medium Roast Cold Brew Singles', 85.00, 'Sweet caramel flavor.', 'Instant Coffee Packets', 'Medium Roast Cold Brew Singles.png', 18),
+(10, 'Matcha Green Tea', 60.00, 'High-quality matcha.', 'Matcha', 'Matcha Green tea.png', 10),
+(11, 'Vanilla Matcha Green Tea', 65.00, 'Special Vanilla Green Tea edition.', 'Matcha', 'Vanilla Matcha Green tea.png', 4),
+(12, 'Matcha Set', 120.00, 'Complete matcha kit.', 'Matcha', 'matcha_set.png', 4),
+(13, 'Iced Coffee Glass', 25.00, 'Perfect for iced coffee.', 'Accessories', 'Iced Coffee Glass.png', 20),
+(14, 'Ceramic Coffee Cup with plate', 40.00, 'Classic hot coffee cup.', 'Accessories', 'Ceramic Coffee Mug.png', 21),
+(15, 'Coffee Scented Candle', 35.00, 'Coffee aroma candle.', 'Accessories', 'Coffee Scented Candle.png', 15),
+(16, 'Matcha Scented Candle', 35.00, 'Relaxing matcha scent.', 'Accessories', 'Matcha Scented Candle.png', 15);
 
 --
 -- Indexes for dumped tables
@@ -164,7 +178,7 @@ ALTER TABLE `customers`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `products`
