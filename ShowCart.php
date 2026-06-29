@@ -11,33 +11,42 @@ if (!isset($_SESSION['cart'])) {
 
 $message = "";
 
+/* Delete one item */
 if (isset($_POST['deleteID'])) {
     unset($_SESSION['cart'][$_POST['deleteID']]);
     $message = "Item Deleted";
 }
 
+/* Update quantity */
 if (isset($_POST['updateID'])) {
     $id = $_POST['updateID'];
     $newQuantity = (int)$_POST['quantity'];
 
+    if ($newQuantity < 1) {
+        $newQuantity = 1;
+    }
+
     $checkStockSql = "SELECT name, stock FROM products WHERE id = '$id'";
     $stockResult = mysqli_query($conn, $checkStockSql);
-    
+
     if ($stockRow = mysqli_fetch_assoc($stockResult)) {
+
         if ($newQuantity > $stockRow['stock']) {
             $message = "Out of stock! Only " . $stockRow['stock'] . " items available for '" . $stockRow['name'] . "'.";
         } else {
             $_SESSION['cart'][$id]['quantity'] = $newQuantity;
-            $message = "Quantity Updated Successfully! 🎉";
+            $message = "Quantity Updated Successfully!";
         }
     }
 }
 
+/* Clear cart */
 if (isset($_POST['deleteALL'])) {
     $_SESSION['cart'] = array();
     $message = "Cart Cleared";
 }
 
+/* Purchase */
 if (isset($_POST['purchase'])) {
 
     if (!isset($_SESSION['customer_id'])) {
@@ -48,20 +57,25 @@ if (isset($_POST['purchase'])) {
     $customer_id = $_SESSION['customer_id'];
 
     foreach ($_SESSION['cart'] as $id => $item) {
+
         $checkStockSql = "SELECT name, stock FROM products WHERE id = '$id'";
         $stockResult = mysqli_query($conn, $checkStockSql);
+
         if ($stockRow = mysqli_fetch_assoc($stockResult)) {
+
             if ($item['quantity'] > $stockRow['stock']) {
                 $message = "Sorry! Only " . $stockRow['stock'] . " items left in stock for '" . $stockRow['name'] . "'.";
-                break; 
+                break;
             }
         }
     }
 
     if ($message == "") {
-        $purchasedItems = array(); 
+
+        $purchasedItems = array();
 
         foreach ($_SESSION['cart'] as $id => $item) {
+
             $product_name = $item['product'];
             $price = $item['price'];
             $quantity = $item['quantity'];
@@ -84,16 +98,15 @@ if (isset($_POST['purchase'])) {
                 die("Stock update error: " . mysqli_error($conn));
             }
 
-            $purchasedItems[] = [
+            $purchasedItems[] = array(
                 'product' => $product_name,
                 'price' => $price,
                 'quantity' => $quantity,
                 'total_price' => $total_price
-            ];
+            );
         }
 
         $_SESSION['last_purchase'] = $purchasedItems;
-
         $_SESSION['cart'] = array();
 
         header("Location: invoice.php");
@@ -109,9 +122,20 @@ if (isset($_POST['purchase'])) {
     <h1>My Cart</h1>
 
     <?php
+
     if ($message != "") {
-        $styleClass = (strpos($message, 'stock') !== false || strpos($message, 'Sorry') !== false) ? "style='color:#8b3a3a; text-align:center; font-weight:bold; margin-bottom:20px; font-size:18px;'" : "class='message'";
-        echo "<p $styleClass>$message</p>";
+
+        if (strpos($message, 'stock') !== false || strpos($message, 'Sorry') !== false) {
+
+            echo "<p style='color:#8b3a3a; text-align:center; font-weight:bold; margin-bottom:20px; font-size:18px;'>
+                    $message
+                  </p>";
+
+        } else {
+
+            echo "<p class='message'>$message</p>";
+
+        }
     }
 
     if (empty($_SESSION['cart'])) {
@@ -138,10 +162,21 @@ if (isset($_POST['purchase'])) {
             $total = $item['price'] * $item['quantity'];
             $grandTotal += $total;
 
+            /* Image path fix */
+            $imageName = isset($item['image']) ? $item['image'] : "default.png";
+
+            if (strpos($imageName, "images/") === 0) {
+                $imagePath = $imageName;
+            } else {
+                $imagePath = "images/" . $imageName;
+            }
+
             echo "<tr>";
 
             echo "<td>
-                    <img src='images/".$item['image']."' style='width:80px; height:80px; object-fit:cover; border-radius:10px;'>
+                    <img src='$imagePath'
+                         alt='".$item['product']."'
+                         style='width:80px; height:80px; object-fit:cover; border-radius:10px;'>
                   </td>";
 
             echo "<td>".$item['product']."</td>";
@@ -151,8 +186,17 @@ if (isset($_POST['purchase'])) {
             echo "<td>
                     <form method='post'>
                         <input type='hidden' name='updateID' value='$id'>
-                        <input type='number' name='quantity' value='".$item['quantity']."' min='1'>
-                        <input type='submit' value='Update' class='UpdateButton'>
+
+                        <input
+                        type='number'
+                        name='quantity'
+                        value='".$item['quantity']."'
+                        min='1'>
+
+                        <input
+                        type='submit'
+                        value='Update'
+                        class='UpdateButton'>
                     </form>
                   </td>";
 
@@ -161,7 +205,11 @@ if (isset($_POST['purchase'])) {
             echo "<td>
                     <form method='post'>
                         <input type='hidden' name='deleteID' value='$id'>
-                        <input type='submit' value='Delete' class='DeleteButton'>
+
+                        <input
+                        type='submit'
+                        value='Delete'
+                        class='DeleteButton'>
                     </form>
                   </td>";
 
@@ -174,20 +222,45 @@ if (isset($_POST['purchase'])) {
         ?>
 
         <div class="actions">
+
             <form method="post">
-                <input type="submit" name="deleteALL" value="Clear Cart" class="ClearButton">
+                <input
+                type="submit"
+                name="deleteALL"
+                value="Clear Cart"
+                class="ClearButton">
             </form>
 
             <?php if (isset($_SESSION['customer_id'])): ?>
+
                 <form method="post">
-                    <input type="submit" name="purchase" value="Purchase" class="BuyButton">
+                    <input
+                    type="submit"
+                    name="purchase"
+                    value="Purchase"
+                    class="BuyButton">
                 </form>
+
             <?php else: ?>
-                <a href="login.php" class="BuyButton" style="text-align:center; text-decoration:none; display:inline-block; line-height:2.5; background-color:#d9534f !important;">Login to Purchase 🔒</a>
+
+                <a
+                href="login.php"
+                class="BuyButton"
+                style="
+                text-align:center;
+                text-decoration:none;
+                display:inline-block;
+                line-height:2.5;
+                background-color:#d9534f !important;
+                ">
+                    Login to Purchase
+                </a>
+
             <?php endif; ?>
+
         </div>
 
-    <?php
+        <?php
     }
     ?>
 
